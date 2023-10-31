@@ -6,9 +6,11 @@
     "@graphql-codegen/introspection": "^3.0.1",
     "@graphql-codegen/typescript": "3.0.3",
     "graphql": "^16.6.0",
+    "prettier": "^3.0.3",
     "typescript": "^5.0.4"
   },
   "scripts": {
+    "format": "prettier --write .",
     "graphql:codegen": "graphql-codegen --config codegen.ts"
   },
   "volta": {
