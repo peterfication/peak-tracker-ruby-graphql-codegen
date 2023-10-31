@@ -11,6 +11,9 @@ const config: CodegenConfig = {
     './graphql.schema.json': {
       plugins: ['introspection'],
     },
+    './lib/peak_tracker/graphql_peak_tracker.rb': {
+      plugins: ['graphql-codegen-peak-tracker.js'],
+    },
   },
 };
 
