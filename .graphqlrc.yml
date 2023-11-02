@@ -1,0 +1,3 @@
+# This config is for IDEs
+schema: graphql.schema.json
+documents: 'src/**/*.graphql'
