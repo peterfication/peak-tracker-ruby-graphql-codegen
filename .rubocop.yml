@@ -1,0 +1,15 @@
+AllCops:
+  TargetRubyVersion: 3.2
+  NewCops: enable
+
+Layout/LineLength:
+  Exclude:
+    - lib/peak_tracker/graphql_peak_tracker.rb
+
+Style/Documentation:
+  Exclude:
+    - lib/peak_tracker/graphql_peak_tracker.rb
+Style/FrozenStringLiteralComment:
+  Enabled: false
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
