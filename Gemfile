@@ -7,5 +7,6 @@ gem "graphql",
     # See https://github.com/github/graphql-client/issues/310
     ">= 2.0.27", "< 2.1"
 gem "graphql-client"
+gem "rake"
 
 gem "rubocop"

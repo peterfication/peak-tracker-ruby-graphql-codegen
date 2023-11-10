@@ -1,0 +1,924 @@
+"""
+A relay page info
+"""
+type PeakTrackerPageInfo {
+  """
+  When paginating forwards, the cursor to continue
+  """
+  endCursor: String
+
+  """
+  When paginating forwards, are there more items?
+  """
+  hasNextPage: Boolean!
+
+  """
+  When paginating backwards, are there more items?
+  """
+  hasPreviousPage: Boolean!
+
+  """
+  When paginating backwards, the cursor to continue
+  """
+  startCursor: String
+}
+
+"""
+
+"""
+type PeakTrackerPeak {
+  """
+  
+  """
+  elevation: Int!
+
+  """
+  
+  """
+  googlePlacesId: String
+
+  """
+  
+  """
+  id: ID!
+
+  """
+  
+  """
+  latitude: Float!
+
+  """
+  
+  """
+  longitude: Float!
+
+  """
+  
+  """
+  name: String!
+
+  """
+  
+  """
+  osmId: Int!
+
+  """
+  
+  """
+  scaleCount: Int!
+
+  """
+  
+  """
+  scaledByUser: Boolean
+
+  """
+  
+  """
+  slug: String!
+
+  """
+  
+  """
+  wikidataId: String
+
+  """
+  
+  """
+  wikipedia: String
+}
+
+"""
+:peak connection
+"""
+type PeakTrackerPeakConnection {
+  """
+  Total count on all pages
+  """
+  count: Int
+
+  """
+  :peak edges
+  """
+  edges: [PeakTrackerPeakEdge!]
+
+  """
+  Page information
+  """
+  pageInfo: PeakTrackerPageInfo!
+}
+
+"""
+:peak edge
+"""
+type PeakTrackerPeakEdge {
+  """
+  Cursor
+  """
+  cursor: String!
+
+  """
+  :peak node
+  """
+  node: PeakTrackerPeak
+}
+
+"""
+
+"""
+input PeakTrackerPeakFilterElevation {
+  """
+  
+  """
+  eq: Int!
+
+  """
+  
+  """
+  greaterThan: Int!
+
+  """
+  
+  """
+  greaterThanOrEqual: Int!
+
+  """
+  
+  """
+  in: [Int!]!
+
+  """
+  
+  """
+  isNil: Boolean!
+
+  """
+  
+  """
+  lessThan: Int!
+
+  """
+  
+  """
+  lessThanOrEqual: Int!
+
+  """
+  
+  """
+  notEq: Int!
+}
+
+"""
+
+"""
+input PeakTrackerPeakFilterGooglePlacesId {
+  """
+  
+  """
+  eq: String!
+
+  """
+  
+  """
+  greaterThan: String!
+
+  """
+  
+  """
+  greaterThanOrEqual: String!
+
+  """
+  
+  """
+  in: [String!]!
+
+  """
+  
+  """
+  isNil: Boolean!
+
+  """
+  
+  """
+  lessThan: String!
+
+  """
+  
+  """
+  lessThanOrEqual: String!
+
+  """
+  
+  """
+  notEq: String!
+}
+
+"""
+
+"""
+input PeakTrackerPeakFilterId {
+  """
+  
+  """
+  eq: ID!
+
+  """
+  
+  """
+  greaterThan: ID!
+
+  """
+  
+  """
+  greaterThanOrEqual: ID!
+
+  """
+  
+  """
+  in: [ID!]!
+
+  """
+  
+  """
+  isNil: Boolean!
+
+  """
+  
+  """
+  lessThan: ID!
+
+  """
+  
+  """
+  lessThanOrEqual: ID!
+
+  """
+  
+  """
+  notEq: ID!
+}
+
+"""
+
+"""
+input PeakTrackerPeakFilterInput {
+  """
+  
+  """
+  and: [PeakTrackerPeakFilterInput!]!
+
+  """
+  
+  """
+  elevation: PeakTrackerPeakFilterElevation!
+
+  """
+  
+  """
+  googlePlacesId: PeakTrackerPeakFilterGooglePlacesId!
+
+  """
+  
+  """
+  id: PeakTrackerPeakFilterId!
+
+  """
+  
+  """
+  latitude: PeakTrackerPeakFilterLatitude!
+
+  """
+  
+  """
+  longitude: PeakTrackerPeakFilterLongitude!
+
+  """
+  
+  """
+  name: PeakTrackerPeakFilterName!
+
+  """
+  
+  """
+  not: [PeakTrackerPeakFilterInput!]!
+
+  """
+  
+  """
+  or: [PeakTrackerPeakFilterInput!]!
+
+  """
+  
+  """
+  osmId: PeakTrackerPeakFilterOsmId!
+
+  """
+  
+  """
+  scaleCount: PeakTrackerPeakFilterScaleCount!
+
+  """
+  
+  """
+  scaledByUser: PeakTrackerPeakFilterScaledByUser!
+
+  """
+  
+  """
+  slug: PeakTrackerPeakFilterSlug!
+
+  """
+  
+  """
+  wikidataId: PeakTrackerPeakFilterWikidataId!
+
+  """
+  
+  """
+  wikipedia: PeakTrackerPeakFilterWikipedia!
+}
+
+"""
+
+"""
+input PeakTrackerPeakFilterLatitude {
+  """
+  
+  """
+  eq: Float!
+
+  """
+  
+  """
+  greaterThan: Float!
+
+  """
+  
+  """
+  greaterThanOrEqual: Float!
+
+  """
+  
+  """
+  in: [Float!]!
+
+  """
+  
+  """
+  isNil: Boolean!
+
+  """
+  
+  """
+  lessThan: Float!
+
+  """
+  
+  """
+  lessThanOrEqual: Float!
+
+  """
+  
+  """
+  notEq: Float!
+}
+
+"""
+
+"""
+input PeakTrackerPeakFilterLongitude {
+  """
+  
+  """
+  eq: Float!
+
+  """
+  
+  """
+  greaterThan: Float!
+
+  """
+  
+  """
+  greaterThanOrEqual: Float!
+
+  """
+  
+  """
+  in: [Float!]!
+
+  """
+  
+  """
+  isNil: Boolean!
+
+  """
+  
+  """
+  lessThan: Float!
+
+  """
+  
+  """
+  lessThanOrEqual: Float!
+
+  """
+  
+  """
+  notEq: Float!
+}
+
+"""
+
+"""
+input PeakTrackerPeakFilterName {
+  """
+  
+  """
+  eq: String!
+
+  """
+  
+  """
+  greaterThan: String!
+
+  """
+  
+  """
+  greaterThanOrEqual: String!
+
+  """
+  
+  """
+  in: [String!]!
+
+  """
+  
+  """
+  isNil: Boolean!
+
+  """
+  
+  """
+  lessThan: String!
+
+  """
+  
+  """
+  lessThanOrEqual: String!
+
+  """
+  
+  """
+  notEq: String!
+}
+
+"""
+
+"""
+input PeakTrackerPeakFilterOsmId {
+  """
+  
+  """
+  eq: Int!
+
+  """
+  
+  """
+  greaterThan: Int!
+
+  """
+  
+  """
+  greaterThanOrEqual: Int!
+
+  """
+  
+  """
+  in: [Int!]!
+
+  """
+  
+  """
+  isNil: Boolean!
+
+  """
+  
+  """
+  lessThan: Int!
+
+  """
+  
+  """
+  lessThanOrEqual: Int!
+
+  """
+  
+  """
+  notEq: Int!
+}
+
+"""
+
+"""
+input PeakTrackerPeakFilterScaleCount {
+  """
+  
+  """
+  eq: Int!
+
+  """
+  
+  """
+  greaterThan: Int!
+
+  """
+  
+  """
+  greaterThanOrEqual: Int!
+
+  """
+  
+  """
+  in: [Int!]!
+
+  """
+  
+  """
+  isNil: Boolean!
+
+  """
+  
+  """
+  lessThan: Int!
+
+  """
+  
+  """
+  lessThanOrEqual: Int!
+
+  """
+  
+  """
+  notEq: Int!
+}
+
+"""
+
+"""
+input PeakTrackerPeakFilterScaledByUser {
+  """
+  
+  """
+  eq: Boolean!
+
+  """
+  
+  """
+  greaterThan: Boolean!
+
+  """
+  
+  """
+  greaterThanOrEqual: Boolean!
+
+  """
+  
+  """
+  in: [Boolean!]!
+
+  """
+  
+  """
+  input: PeakTrackerPeakScaledByUserFieldInput!
+
+  """
+  
+  """
+  isNil: Boolean!
+
+  """
+  
+  """
+  lessThan: Boolean!
+
+  """
+  
+  """
+  lessThanOrEqual: Boolean!
+
+  """
+  
+  """
+  notEq: Boolean!
+}
+
+"""
+
+"""
+input PeakTrackerPeakFilterSlug {
+  """
+  
+  """
+  eq: String!
+
+  """
+  
+  """
+  greaterThan: String!
+
+  """
+  
+  """
+  greaterThanOrEqual: String!
+
+  """
+  
+  """
+  in: [String!]!
+
+  """
+  
+  """
+  isNil: Boolean!
+
+  """
+  
+  """
+  lessThan: String!
+
+  """
+  
+  """
+  lessThanOrEqual: String!
+
+  """
+  
+  """
+  notEq: String!
+}
+
+"""
+
+"""
+input PeakTrackerPeakFilterWikidataId {
+  """
+  
+  """
+  eq: String!
+
+  """
+  
+  """
+  greaterThan: String!
+
+  """
+  
+  """
+  greaterThanOrEqual: String!
+
+  """
+  
+  """
+  in: [String!]!
+
+  """
+  
+  """
+  isNil: Boolean!
+
+  """
+  
+  """
+  lessThan: String!
+
+  """
+  
+  """
+  lessThanOrEqual: String!
+
+  """
+  
+  """
+  notEq: String!
+}
+
+"""
+
+"""
+input PeakTrackerPeakFilterWikipedia {
+  """
+  
+  """
+  eq: String!
+
+  """
+  
+  """
+  greaterThan: String!
+
+  """
+  
+  """
+  greaterThanOrEqual: String!
+
+  """
+  
+  """
+  in: [String!]!
+
+  """
+  
+  """
+  isNil: Boolean!
+
+  """
+  
+  """
+  lessThan: String!
+
+  """
+  
+  """
+  lessThanOrEqual: String!
+
+  """
+  
+  """
+  notEq: String!
+}
+
+"""
+
+"""
+input PeakTrackerPeakScaledByUserFieldInput {
+  """
+  
+  """
+  userId: ID
+}
+
+"""
+
+"""
+enum PeakTrackerPeakSortField {
+  """
+  null
+  """
+  ELEVATION
+
+  """
+  null
+  """
+  GOOGLE_PLACES_ID
+
+  """
+  null
+  """
+  ID
+
+  """
+  null
+  """
+  LATITUDE
+
+  """
+  null
+  """
+  LONGITUDE
+
+  """
+  null
+  """
+  NAME
+
+  """
+  null
+  """
+  OSM_ID
+
+  """
+  null
+  """
+  SCALED_BY_USER
+
+  """
+  null
+  """
+  SCALE_COUNT
+
+  """
+  null
+  """
+  SLUG
+
+  """
+  null
+  """
+  WIKIDATA_ID
+
+  """
+  null
+  """
+  WIKIPEDIA
+}
+
+"""
+
+"""
+input PeakTrackerPeakSortInput {
+  """
+  
+  """
+  field: PeakTrackerPeakSortField
+
+  """
+  
+  """
+  order: PeakTrackerSortOrder!
+
+  """
+  
+  """
+  scaledByUserInput: PeakTrackerPeakScaledByUserFieldInput!
+}
+
+"""
+
+"""
+enum PeakTrackerSortOrder {
+  """
+  null
+  """
+  ASC
+
+  """
+  null
+  """
+  ASC_NULLS_FIRST
+
+  """
+  null
+  """
+  ASC_NULLS_LAST
+
+  """
+  null
+  """
+  DESC
+
+  """
+  null
+  """
+  DESC_NULLS_FIRST
+
+  """
+  null
+  """
+  DESC_NULLS_LAST
+}
+
+"""
+The query root of the GraphQL API
+"""
+type Query {
+  """
+  :peak connection
+  """
+  peaks(
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """
+    A filter to limit the results
+    """
+    filter: PeakTrackerPeakFilterInput
+
+    """
+    Returns the first _n_ elements from the list.
+    """
+    first: Int
+
+    """
+    Returns the last _n_ elements from the list.
+    """
+    last: Int
+
+    """
+    Show only peaks scaled by the current actor (Not implemented yet)
+    """
+    scaledByActor: Boolean
+
+    """
+    How to sort the records in the response
+    """
+    sort: [PeakTrackerPeakSortInput!]
+  ): PeakTrackerPeakConnection!
+}

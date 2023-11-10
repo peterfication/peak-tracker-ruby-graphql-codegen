@@ -4,7 +4,7 @@ module.exports = {
     // See https://the-guild.dev/graphql/codegen/docs/custom-codegen/plugin-structure
 
     const typesMap = schema.getTypeMap();
-    console.log(typesMap);
+    // console.log(typesMap);
 
     const generalOutput = [
       "# This file has been auto-generated. Don't edit it manually but run",
@@ -20,6 +20,10 @@ module.exports = {
       outputEnumType(typesMap[typeKey]),
     );
 
+    const inputTypesOutput = customInputTypeKeys(typesMap).map((typeKey) =>
+      outputInputObjectType(typesMap[typeKey], getCustomTypeNames(typesMap)),
+    );
+
     const typesOutput = customObjectTypeKeys(typesMap).map((typeKey) =>
       outputObjectType(typesMap[typeKey], getCustomTypeNames(typesMap)),
     );
@@ -29,6 +33,7 @@ module.exports = {
     return [
       ...generalOutput,
       ...enumsOutput,
+      ...inputTypesOutput,
       ...typesOutput,
       ...argumentsOutput,
       '',
@@ -46,7 +51,6 @@ const ignoredTypes = [
   'Boolean',
   'String',
   'Query',
-  'RootQueryType',
   'Node',
 ];
 
@@ -59,11 +63,22 @@ const customEnumTypeKeys = (typesMap) =>
   );
 
 /**
+ * Get all custom input type keys to generate input type classes with it.
+ */
+const customInputTypeKeys = (typesMap) =>
+  customTypeKeys(typesMap).filter(
+    (typeKey) =>
+      typesMap[typeKey].constructor.name === 'GraphQLInputObjectType',
+  );
+
+/**
  * Get all custom object type keys to generate object type classes with it.
  */
 const customObjectTypeKeys = (typesMap) =>
   customTypeKeys(typesMap).filter(
-    (typeKey) => typesMap[typeKey].constructor.name !== 'GraphQLEnumType',
+    (typeKey) =>
+      typesMap[typeKey].constructor.name !== 'GraphQLEnumType' &&
+      typesMap[typeKey].constructor.name !== 'GraphQLInputObjectType',
   );
 
 /**
@@ -92,7 +107,24 @@ const camelToSnakeCase = (str) =>
 const pascalToConstantCase = (str) =>
   camelToSnakeCase(str).toUpperCase().slice(1);
 
-const order = ['PageInfo'];
+const order = [
+  'PageInfo',
+  'User',
+  'PeakTrackerSortOrder',
+  'Peak',
+  'PeakEdge',
+  'PeakFilterLatitude',
+  'PeakFilterLongitude',
+  'PeakFilterName',
+  'PeakFilterOsmId',
+  'PeakScaledByUserFieldInput',
+  'PeakFilterScaleCount',
+  'PeakFilterScaledByUser',
+  'PeakFilterSlug',
+  'PeakFilterWikidataId',
+  'PeakFilterWikipedia',
+  'PeakConnection',
+];
 /**
  * Order the type definitions so that a single Ruby file
  * won't have problems with classes that are not defined yet.
@@ -106,6 +138,13 @@ const getOrder = (typeKey) =>
 const getTypeClass = (type, customTypeNames) => {
   const typeClass = type.ofType?.name || type.name;
 
+  // console.log(
+  //   'getTypeClass',
+  //   typeClass,
+  //   type.ofType?.constructor?.name,
+  //   type.constructor?.name,
+  // );
+
   if (type.ofType?.constructor?.name === 'GraphQLList') {
     return `[${getTypeClass(type.ofType.ofType, customTypeNames)}]`;
   }
@@ -114,8 +153,18 @@ const getTypeClass = (type, customTypeNames) => {
     return `[${getTypeClass(type.ofType, customTypeNames)}]`;
   }
 
-  if (type.ofType?.constructor?.name === 'GraphQLEnumType') {
+  if (
+    type.ofType?.constructor?.name === 'GraphQLEnumType' ||
+    type.constructor?.name === 'GraphQLEnumType'
+  ) {
     return `PeakTracker::Types::Enums::${typeClass}`;
+  }
+
+  if (
+    type.ofType?.constructor?.name === 'GraphQLInputObjectType' ||
+    type.constructor?.name === 'GraphQLInputObjectType'
+  ) {
+    return `PeakTracker::Types::Inputs::${typeClass}`;
   }
 
   if (customTypeNames.includes(typeClass)) {
@@ -128,12 +177,54 @@ const getTypeClass = (type, customTypeNames) => {
 /**
  * Generate the Ruby output for an object type.
  */
+const outputInputObjectType = (objectType, customTypes) => {
+  const outputHeader = [
+    '',
+    'module PeakTracker',
+    '  module Types',
+    '    module Inputs',
+    `      class ${objectType.name} < ::Types::BaseInput`,
+    `        graphql_name "PeakTracker${objectType.name}"`,
+    `        description "${(objectType.description || '').replace(
+      /\n$/g,
+      '',
+    )}"`,
+    '',
+  ];
+
+  const fields =
+    typeof objectType.getFields === 'function' ? objectType.getFields() : {};
+
+  const outputFields = Object.keys(fields).map((fieldKey) => {
+    const field = fields[fieldKey];
+
+    const nullValue = field.type.constructor.name !== 'GraphQLNonNull';
+    const typeClass = getTypeClass(field.type, customTypes);
+    const description = (field.description || '')
+      .replace(/\n$/g, '')
+      .replaceAll('"', '\\"');
+
+    return [
+      `        argument :${camelToSnakeCase(field.name)}`,
+      typeClass,
+      `required: ${nullValue}`,
+      `description: "${description}"`,
+    ].join(', ');
+  });
+
+  const outputFooter = ['      end', '    end', '  end', 'end'];
+
+  return [...outputHeader, ...outputFields, ...outputFooter].join('\n');
+};
+/**
+ * Generate the Ruby output for an object type.
+ */
 const outputObjectType = (objectType, customTypes) => {
   const outputHeader = [
     '',
     'module PeakTracker',
     '  module Types',
-    `    class ${objectType.name} < Customer::Types::BaseObject`,
+    `    class ${objectType.name} < ::Types::BaseObject`,
     `      graphql_name "PeakTracker${objectType.name}"`,
     `      description "${(objectType.description || '').replace(/\n$/g, '')}"`,
     '',
@@ -183,7 +274,7 @@ const outputArgumentsModule = (typesMap) => {
     '      # end',
     '      def self.define_arguments(type, constant, field, keys)',
     '        keys.each do |arg|',
-    '          definition = "PeakTracker::Types::Arguments::#{constant}".constantize[field][arg]',
+    '          definition = Object.const_get("PeakTracker::Types::Arguments::#{constant}")[field][arg]',
     '          type.argument(',
     '            arg,',
     '            definition[:type],',
@@ -214,9 +305,7 @@ const outputArgumentsModule = (typesMap) => {
  * Generate the Ruby output for an object type.
  */
 const outputArguments = (objectType, customTypes) => {
-  const outputHeader = [
-    `      ${pascalToConstantCase(objectType.name)} = {`,
-  ];
+  const outputHeader = [`      ${pascalToConstantCase(objectType.name)} = {`];
 
   const fields =
     typeof objectType.getFields === 'function' ? objectType.getFields() : {};
@@ -270,9 +359,7 @@ const outputArguments = (objectType, customTypes) => {
     return '';
   }
 
-  const outputFooter = [
-    '      }.freeze',
-  ];
+  const outputFooter = ['      }.freeze'];
 
   return [...outputHeader, ...argumentsOutput, ...outputFooter];
 };
@@ -281,13 +368,12 @@ const outputArguments = (objectType, customTypes) => {
  * Generate the Ruby output for an enum type.
  */
 const outputEnumType = (enumType) => {
-  console.log(enumType);
   const outputHeader = [
     '',
     'module PeakTracker',
     '  module Types',
     '    module Enums',
-    `      class ${enumType.name} < Customer::Types::BaseEnum`,
+    `      class ${enumType.name} < ::Types::BaseEnum`,
     `        graphql_name "PeakTracker${enumType.name}"`,
     `        description "${(enumType.description || '').replace(/\n$/g, '')}"`,
     '',
